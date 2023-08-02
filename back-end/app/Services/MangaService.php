@@ -28,4 +28,9 @@ class MangaService
         $result = $this->mangaRepository->getModel()->upsert($data, $attributes);
         return  $result;
     }
+
+    public function getMangasHaveNotClone()
+    {
+        return $this->mangaRepository->getMangasHaveNotClone();
+    }
 }

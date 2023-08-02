@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Manga;
+use Illuminate\Support\Facades\Log;
 
 class MangaObserver
 {
@@ -11,7 +12,7 @@ class MangaObserver
      */
     public function created(Manga $manga): void
     {
-        \Log::info('133');
+        Log::info('observer listen created event');
     }
 
     /**

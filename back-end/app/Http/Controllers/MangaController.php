@@ -2,16 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Interfaces\MangaInterface;
 use Illuminate\Http\Request;
 
 class MangaController extends Controller
 {
+    private $mangaInterface;
+    public function  __construct(MangaInterface $mangaInterface)
+    {
+        $this->mangaInterface = $mangaInterface;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $result = $this->mangaInterface->advancedGet([
+            'paginate' => [
+                'per_page' => 20,
+                'current_paged' => 1,
+            ],
+        ]);
+        // $tranformer =
+        return $result;
     }
 
     /**

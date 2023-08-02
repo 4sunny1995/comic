@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Constants\ImageConstant;
 use App\Constants\MangaConstant;
 use App\Models\History;
 use App\Services\MangaService;
+use App\Traits\ImageTrait;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +14,8 @@ use Koku\LaravelComic\MangaVerse;
 
 class FetchManga extends Command
 {
+    use ImageTrait;
+
     private $mangaService;
     public function __construct(MangaService $mangaService)
     {
@@ -47,7 +51,7 @@ class FetchManga extends Command
         try {
             $url = $host . MangaConstant::FETCH_MANGA_PREFIX;
             $page = !empty($history) ? $history->page + 1 : 1;
-            while(true) {
+            // while(true) {
                 $query = [
                     "page" => $page
                 ];
@@ -56,13 +60,23 @@ class FetchManga extends Command
 
                 if (!empty($result['data'])) {
                     $data = $result['data'];
+
                     foreach($data as &$row) {
                         $row['manga_id'] = $row['id'];
                         $row['authors'] = json_encode($row['authors']);
                         $row['genres'] = json_encode($row['genres']);
+
                         unset($row['id']);
+                        $item = $this->mangaService->createManga($row);
+                        if ($row['thumb']) {
+                            $storage_path = ImageConstant::getStoragePath($item->id);
+                            $this->cloneImage($row['thumb'], $storage_path);
+                            $item->thumb = $storage_path;
+                            $item->save();
+                        }
                     }
-                    $this->mangaService->insertMultipleRow($data);
+                    // $this->mangaService->insertMultipleRow($data);
+
                     History::create([
                         'name' => MangaConstant::FETCH_MANGA_PREFIX,
                         'query' => json_encode($query),
@@ -70,7 +84,8 @@ class FetchManga extends Command
                     ]);
                     $page++;
                 }
-            }
+
+            // }
             if ($result) {
                 return true;
             }

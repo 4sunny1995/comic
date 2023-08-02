@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Manga extends Model
 {
@@ -40,6 +41,13 @@ class Manga extends Model
         return Attribute::make(
             get: fn (string $v) => $v,
             set: fn (string $v) => json_encode($v)
+        );
+    }
+
+    public function thumb(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $v) => Storage::url("$v")
         );
     }
 }
