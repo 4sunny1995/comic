@@ -1,0 +1,18 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "./src/instances/**/*.ts", "./src/common/**/*.ts"],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    
+  },
+  "files": [
+    "env.d.ts", "./src/common/index.ts", "./src/instances/index.ts"
+  ]
+}
